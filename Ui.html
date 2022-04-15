@@ -1,0 +1,58 @@
+<script>
+  const addItemButton = document.getElementById("addButton")
+  const loader = document.getElementById("loader")
+  const addForm = document.getElementById("addForm")
+  const successAlert = document.getElementById("successAlert")
+
+  successAlert.style.display = "none"
+  loader.style.display = "none"
+
+
+  const toggleDisplay = () => {
+    if(loader.style.display == "block"){
+      loader.style.display = "none"
+      addForm.style.display = "block"
+    } else {
+      loader.style.display = "block"
+      addForm.style.display = "none"
+    }
+  }
+
+  const showSuccess = () => {
+    successAlert.style.display = "block"
+    setTimeout(() => {
+        successAlert.style.display = "none"
+    }, 3000);
+  }
+
+  const getValues = () => {
+    const productName = document.getElementById("productName").value;
+    const recieveDate = document.getElementById('recieveDate').value;
+    const sellByDate = document.getElementById('sellByDate').value;
+
+    return [productName, recieveDate, sellByDate]
+  }
+
+  const successfulAdd = () => {
+    toggleDisplay()
+    document.getElementById("productName").value = ""
+    document.getElementById('recieveDate').value = ""
+    document.getElementById('sellByDate').value = ""
+    showSuccess()
+  }
+
+
+  addButton.addEventListener(
+      "click", (event) => { 
+      event.preventDefault();
+      const values = getValues()
+      if(values.includes('')){
+        alert("Please fill out all fields")
+        return
+      }
+      toggleDisplay()
+      //send to back end
+      google.script.run.withSuccessHandler(successfulAdd).addToCalendar(values);
+      }
+    ) 
+</script>
